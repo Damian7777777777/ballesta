@@ -1,5 +1,5 @@
 /* ============================================================
-   BALLESTA CONDOMINIO — main.js
+   BALLESTA CONDOMINIO — ballesta.js
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
 
   /* ─── HAMBURGER ─── */
-  const ham  = document.getElementById('hamburger');
+  const ham   = document.getElementById('hamburger');
   const mMenu = document.getElementById('mobile-menu');
   ham?.addEventListener('click', () => {
     ham.classList.toggle('active');
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ─── SCROLL REVEAL ─── */
   const revealObs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); } });
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.reveal, .stat-cell').forEach(el => revealObs.observe(el));
@@ -85,9 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const duration = 1600;
     const start = performance.now();
     const run = (now) => {
-      const pct = Math.min((now - start) / duration, 1);
+      const pct   = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - pct, 3);
-      const val = eased * target;
+      const val   = eased * target;
       el.textContent = (decimals ? val.toFixed(decimals) : Math.round(val)) + suffix;
       if (pct < 1) requestAnimationFrame(run);
     };
@@ -108,14 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
 
-  /* ─── TABS (modelos) ─── */
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  /* ─── PLANTAS TABS (prototipo) ─── */
+  document.querySelectorAll('.planta-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const panel = btn.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const planta = btn.dataset.planta;
+      document.querySelectorAll('.planta-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.planta-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById(panel)?.classList.add('active');
+      document.getElementById('planta-' + planta)?.classList.add('active');
     });
   });
 
@@ -147,20 +147,19 @@ document.addEventListener('DOMContentLoaded', () => {
   lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLb(); });
   document.addEventListener('keydown', e => {
     if (!lightbox?.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLb();
-    if (e.key === 'ArrowLeft')  lbNav(-1);
-    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'Escape')      closeLb();
+    if (e.key === 'ArrowLeft')   lbNav(-1);
+    if (e.key === 'ArrowRight')  lbNav(1);
   });
 
-  // Collect gallery items
   function setupGallery() {
-    const items = document.querySelectorAll('.g-item[data-img]');
+    const items = document.querySelectorAll('.g-item');
     const allSrcs = [];
     items.forEach((item, i) => {
-      const key  = item.getAttribute('data-img');
-      const src  = (typeof IMGS !== 'undefined' && IMGS[key]) ? IMGS[key] : '';
+      const img = item.querySelector('img');
+      const src = img ? (img.src || '') : '';
       allSrcs.push(src);
-      item.addEventListener('click', () => openLb(allSrcs, i));
+      item.addEventListener('click', () => { if (src) openLb(allSrcs.filter(Boolean), allSrcs.indexOf(src)); });
     });
   }
   setupGallery();
@@ -188,20 +187,24 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ─── TICKER CLONE ─── */
   const ticker = document.querySelector('.ticker-track');
   if (ticker) {
-    ticker.innerHTML += ticker.innerHTML; // duplicate for seamless loop
+    ticker.innerHTML += ticker.innerHTML;
   }
 
   /* ─── CONTACT FORM ─── */
   const contactForm = document.getElementById('contact-form');
   contactForm?.addEventListener('submit', e => {
     e.preventDefault();
-    const btn = contactForm.querySelector('[type="submit"]');
+    const btn  = contactForm.querySelector('[type="submit"]');
     const orig = btn.textContent;
     btn.textContent = 'Enviando...';
     btn.disabled = true;
     setTimeout(() => {
       btn.textContent = '¡Mensaje enviado!';
-      setTimeout(() => { btn.textContent = orig; btn.disabled = false; contactForm.reset(); }, 3000);
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.disabled = false;
+        contactForm.reset();
+      }, 3000);
     }, 1200);
   });
 
