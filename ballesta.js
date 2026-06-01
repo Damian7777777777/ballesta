@@ -24,14 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ─── CUSTOM CURSOR (desktop only) ─── */
-  const isTouchDevice = window.matchMedia('(hover: none)').matches;
+  const isTouch = window.matchMedia('(hover: none)').matches;
   const dot  = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
   let mx = 0, my = 0, rx = 0, ry = 0;
 
-  if (isTouchDevice && dot)  dot.style.display  = 'none';
-  if (isTouchDevice && ring) ring.style.display = 'none';
-  if (isTouchDevice) { document.body.style.cursor = 'auto'; }
+  if (isTouch) {
+    if (dot)  dot.style.display = 'none';
+    if (ring) ring.style.display = 'none';
+    document.body.style.cursor = 'auto';
+  }
 
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
   (function animCursor() {
@@ -187,31 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const ticker = document.querySelector('.ticker-track');
   if (ticker) {
     ticker.innerHTML += ticker.innerHTML; // duplicate for seamless loop
-  }
-
-  /* ─── MORTGAGE CALCULATOR ─── */
-  const calcForm = document.getElementById('calc-form');
-  if (calcForm) {
-    function calcMortgage() {
-      const price    = parseFloat(document.getElementById('calc-price')?.value) || 0;
-      const enganche = parseFloat(document.getElementById('calc-enganche')?.value) || 20;
-      const rate     = parseFloat(document.getElementById('calc-rate')?.value) || 10.5;
-      const years    = parseInt(document.getElementById('calc-years')?.value) || 20;
-
-      const loan    = price * (1 - enganche / 100);
-      const monthly = rate / 100 / 12;
-      const n       = years * 12;
-      const payment = n === 0 ? 0 : loan * monthly * Math.pow(1 + monthly, n) / (Math.pow(1 + monthly, n) - 1);
-
-      const fmt = v => v.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
-      document.getElementById('calc-result-monthly')  && (document.getElementById('calc-result-monthly').textContent  = fmt(payment));
-      document.getElementById('calc-result-enganche') && (document.getElementById('calc-result-enganche').textContent = fmt(price * enganche / 100));
-      document.getElementById('calc-result-loan')     && (document.getElementById('calc-result-loan').textContent    = fmt(loan));
-      document.getElementById('calc-result-total')    && (document.getElementById('calc-result-total').textContent   = fmt(payment * n));
-    }
-
-    calcForm.querySelectorAll('input, select').forEach(el => el.addEventListener('input', calcMortgage));
-    calcMortgage();
   }
 
   /* ─── CONTACT FORM ─── */
