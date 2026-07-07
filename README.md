@@ -2,7 +2,7 @@
 
 Landing page comercial responsiva para **Ballesta Condominio**, desarrollo residencial de Construcciones Aryve en Querétaro, México. Sitio de una sola página (one-page) enfocado en conversión: presenta el desarrollo, sus amenidades, el prototipo de casa disponible, ubicación y un formulario de contacto para agendar visitas.
 
-**Demo en vivo:** https://damian7777777777.github.io/ballesta/
+**Demo en vivo:** https://damian-aguilera.github.io/ballesta/
 
 ## Capturas
 
